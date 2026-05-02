@@ -1,1 +1,273 @@
+# @title Default title text
+import IPython
 
+html_code = """
+<style>
+  body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    background-color: #f0f2f5; 
+    display: flex; 
+    justify-content: center; 
+    padding: 40px 20px; 
+    margin: 0;
+  }
+  .container { 
+    background: white; 
+    padding: 30px; 
+    border-radius: 16px; 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+    width: 100%; 
+    max-width: 550px; 
+  }
+  .warning { 
+    background: #fff3cd; 
+    color: #856404; 
+    padding: 20px; 
+    border-radius: 8px; 
+    font-size: 1.1rem; 
+    margin-bottom: 20px; 
+    border: 2px solid #ffeeba; 
+    text-align: center; 
+    font-weight: 800; 
+  }
+  .card { 
+    background: #f8f9fa !important; 
+    padding: 20px; 
+    border-radius: 12px; 
+    margin-bottom: 25px; 
+    border-left: 8px solid #007bff; 
+    line-height: 1.6;
+    font-size: 1.1rem;
+    color: #212529 !important; 
+    opacity: 1 !important; 
+    display: block !important;
+  }
+  .step { 
+    background: #ffffff; 
+    padding: 20px; 
+    border-radius: 12px; 
+    margin-bottom: 20px; 
+    border: 2px solid #e9ecef; 
+    transition: all 0.4s ease; 
+  }
+  .step-active { 
+    border-color: #007bff; 
+    box-shadow: 0 4px 12px rgba(0,123,255,0.15); 
+  }
+  .step-locked { 
+    opacity: 0.3; 
+    pointer-events: none; 
+    filter: grayscale(1); 
+  }
+  label { 
+    display: block; 
+    font-weight: 700; 
+    margin-bottom: 12px; 
+    color: #2c3e50; 
+    font-size: 1rem; 
+  }
+  
+  /* FIXED INPUT STYLING */
+  input[type=number] { 
+    width: 100%; 
+    padding: 14px; 
+    border: 2px solid #ddd; 
+    border-radius: 8px; 
+    box-sizing: border-box; 
+    font-size: 16px;
+    background-color: white !important;
+    color: #212529 !important;
+  }
+
+  .syringe-visual { 
+    margin: 20px 0; 
+    background: #e9ecef; 
+    height: 45px; 
+    border: 3px solid #495057; 
+    border-radius: 5px 30px 30px 5px; 
+    position: relative; 
+    overflow: hidden; 
+    display: flex; 
+  }
+  .fill-drug { background: #007bff; height: 100%; width: 0%; transition: width 0.4s ease-out; }
+  .fill-saline { background: #add8e6; height: 100%; width: 0%; transition: width 0.4s ease-out; }
+  .syringe-label { 
+    position: absolute; 
+    width: 100%; 
+    top: 12px; 
+    text-align: center; 
+    font-size: 0.85rem; 
+    font-weight: 800; 
+    z-index: 5; 
+    color: #212529; 
+  }
+  .math-preview { 
+    background: #2c3e50; 
+    color: #2ecc71; 
+    padding: 12px; 
+    border-radius: 8px; 
+    font-family: monospace; 
+    text-align: center; 
+    margin-top: 15px; 
+    font-size: 1.1rem; 
+  }
+  button { 
+    width: 100%; 
+    padding: 14px; 
+    color: white; 
+    border: none; 
+    border-radius: 8px; 
+    font-size: 1rem; 
+    font-weight: 700; 
+    cursor: pointer; 
+    margin-top: 5px;
+  }
+  .btn-check { background: #28a745; }
+  .btn-next { background: #6c757d; margin-top: 15px; }
+  .feedback { margin-top: 12px; font-weight: 700; display: none; padding: 10px; border-radius: 6px; text-align: center; }
+</style>
+
+<div class="container">
+  <div class="warning">
+    ⚠️ EDUCATIONAL CALCULATION PRACTICE ONLY<br>
+    <small style="font-weight: 400;">ALL DOSES ARE FICTIONAL AND FOR TRAINING PURPOSES ONLY.</small>
+  </div>
+  
+  <div id="scenario" class="card">Loading child case...</div>
+
+  <div id="step1" class="step step-active">
+    <label>1. Target Dose for this Child (mg):</label>
+    <input type="number" id="userMg" step="any" placeholder="Enter mg">
+    <button class="btn-check" onclick="checkStep1()">Confirm Dose</button>
+    <div id="f1" class="feedback"></div>
+  </div>
+
+  <div id="step2" class="step step-locked">
+    <label>2. Prepare Dilution Syringe (ml):</label>
+    <div style="display:flex; gap:10px; margin-bottom:10px;">
+      <div style="flex:1">
+        <small>Raw Drug (ml)</small>
+        <input type="number" id="drawDrug" step="0.1" placeholder="ml" oninput="updateSyringe()">
+      </div>
+      <div style="flex:1">
+        <small>Add Saline (ml)</small>
+        <input type="number" id="drawSaline" step="0.1" placeholder="ml" oninput="updateSyringe()">
+      </div>
+    </div>
+    <div class="syringe-visual">
+      <div id="fillDrug" class="fill-drug"></div>
+      <div id="fillSaline" class="fill-saline"></div>
+      <div class="syringe-label">DILUTION SYRINGE</div>
+    </div>
+    <div class="math-preview">Mix Concentration: <span id="mixConc">0.00</span> mg/ml</div>
+    <button class="btn-check" style="margin-top:15px" onclick="checkStep2()">Confirm Dilution</button>
+    <div id="f2" class="feedback"></div>
+  </div>
+
+  <div id="step3" class="step step-locked">
+    <label>3. Final Volume to Administer (ml):</label>
+    <p style="font-size:0.8rem; color:#666; font-style: italic;">How many ml will you push based on your mix?</p>
+    <input type="number" id="userPush" step="any" placeholder="Enter ml">
+    <button class="btn-check" onclick="checkStep3()">Administer Dose</button>
+    <div id="f3" class="feedback"></div>
+  </div>
+
+  <button class="btn-next" onclick="generateScenario()">Next Case</button>
+</div>
+
+<script>
+  const medications = [
+    { name: "Adrenaline", protocol: "0.01mg/kg", conc: 1, vol: 1 },
+    { name: "Ketamine - Analgesia", protocol: "0.4mg/kg", conc: 50, vol: 10 },
+    { name: "Furosemide", protocol: "1mg/kg", conc: 10, vol: 2 },
+    { name: "Tranexamic Acid", protocol: "15mg/kg", conc: 50, vol: 10 }
+  ];
+
+  let state = { targetMg: 0, currentMed: {}, currentMixConc: 0 };
+
+  window.generateScenario = function() {
+    const med = medications[Math.floor(Math.random() * medications.length)];
+    const weight = Math.floor(Math.random() * 13) + 3;
+    state.currentMed = med;
+    state.targetMg = parseFloat(med.protocol) * weight;
+
+    document.getElementById('scenario').innerHTML = `
+      <strong>Patient:</strong> Child (${weight}kg)<br>
+      <strong>Medication:</strong> <span style="color:#007bff; font-weight:bold;">${med.name}</span><br>
+      <strong>Protocol:</strong> ${med.protocol}<br>
+      <strong>Supplied:</strong> ${med.conc}mg/ml (${med.vol}ml ampule)
+    `;
+
+    document.querySelectorAll('.feedback').forEach(f => f.style.display = 'none');
+    document.querySelectorAll('.step').forEach(s => s.className = 'step step-locked');
+    document.getElementById('step1').className = 'step step-active';
+    document.getElementById('userMg').value = '';
+    document.getElementById('drawDrug').value = '';
+    document.getElementById('drawSaline').value = '';
+    document.getElementById('userPush').value = '';
+    updateSyringe();
+  };
+
+  window.updateSyringe = function() {
+    const d = parseFloat(document.getElementById('drawDrug').value) || 0;
+    const s = parseFloat(document.getElementById('drawSaline').value) || 0;
+    const total = d + s;
+    if (total > 0) {
+      state.currentMixConc = (d * state.currentMed.conc) / total;
+      document.getElementById('mixConc').innerText = state.currentMixConc.toFixed(3);
+      document.getElementById('fillDrug').style.width = (d / 20 * 100) + "%";
+      document.getElementById('fillSaline').style.width = (s / 20 * 100) + "%";
+    } else {
+      document.getElementById('mixConc').innerText = "0.000";
+      document.getElementById('fillDrug').style.width = "0%";
+      document.getElementById('fillSaline').style.width = "0%";
+    }
+  };
+
+  window.checkStep1 = function() {
+    const val = parseFloat(document.getElementById('userMg').value);
+    const f = document.getElementById('f1');
+    f.style.display = 'block';
+    if (Math.abs(val - state.targetMg) < 0.01) {
+      f.innerHTML = "✅ Correct. Target is " + state.targetMg.toFixed(2) + "mg";
+      f.style.color = "#155724"; f.style.backgroundColor = "#d4edda";
+      document.getElementById('step2').className = 'step step-active';
+    } else {
+      f.innerHTML = "❌ Calculation Error. Check weight x protocol.";
+      f.style.color = "#721c24"; f.style.backgroundColor = "#f8d7da";
+    }
+  };
+
+  window.checkStep2 = function() {
+    const d = parseFloat(document.getElementById('drawDrug').value);
+    const f = document.getElementById('f2');
+    f.style.display = 'block';
+    if (d > 0) {
+      f.innerHTML = "✅ Dilution Ready.";
+      f.style.color = "#155724"; f.style.backgroundColor = "#d4edda";
+      document.getElementById('step3').className = 'step step-active';
+    } else {
+      f.innerHTML = "❌ Draw drug first.";
+      f.style.color = "#721c24"; f.style.backgroundColor = "#f8d7da";
+    }
+  };
+
+  window.checkStep3 = function() {
+    const push = parseFloat(document.getElementById('userPush').value);
+    const expectedPush = state.targetMg / state.currentMixConc;
+    const f = document.getElementById('f3');
+    f.style.display = 'block';
+    if (Math.abs(push - expectedPush) < 0.1) {
+      f.innerHTML = "✅ SUCCESS! Dose administered.";
+      f.style.color = "#155724"; f.style.backgroundColor = "#d4edda";
+    } else {
+      f.innerHTML = `❌ Volume Error. You needed ${expectedPush.toFixed(2)}ml.`;
+      f.style.color = "#721c24"; f.style.backgroundColor = "#f8d7da";
+    }
+  };
+
+  generateScenario();
+</script>
+"""
+
+IPython.display.display(IPython.display.HTML(html_code))
