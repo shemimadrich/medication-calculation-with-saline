@@ -1,7 +1,7 @@
-# @title Default title text
 import IPython
 
-html_code = """
+# We define the HTML first without the @title tag to keep the UI clean
+drug_trainer_html = """
 <style>
   body { 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -66,8 +66,6 @@ html_code = """
     color: #2c3e50; 
     font-size: 1rem; 
   }
-  
-  /* FIXED INPUT STYLING */
   input[type=number] { 
     width: 100%; 
     padding: 14px; 
@@ -78,7 +76,6 @@ html_code = """
     background-color: white !important;
     color: #212529 !important;
   }
-
   .syringe-visual { 
     margin: 20px 0; 
     background: #e9ecef; 
@@ -229,7 +226,7 @@ html_code = """
     const f = document.getElementById('f1');
     f.style.display = 'block';
     if (Math.abs(val - state.targetMg) < 0.01) {
-      f.innerHTML = "✅ Correct. Target is " + state.targetMg.toFixed(2) + "mg";
+      f.innerHTML = "✅ Correct. Dose required is " + state.targetMg.toFixed(2) + "mg";
       f.style.color = "#155724"; f.style.backgroundColor = "#d4edda";
       document.getElementById('step2').className = 'step step-active';
     } else {
@@ -270,4 +267,5 @@ html_code = """
 </script>
 """
 
-IPython.display.display(IPython.display.HTML(html_code))
+# Now display the HTML
+IPython.display.display(IPython.display.HTML(drug_trainer_html))
