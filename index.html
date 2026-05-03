@@ -26,6 +26,127 @@
     text-align: center; 
     font-weight: 800; 
   }
+  .disclaimer {
+    background: #f0f2f5;
+    color: #495057;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    margin-top: 25px;
+    border: 1px solid #dee2e6;
+    text-align: center;
+    line-height: 1.5;
+  }
+  .disclaimer a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  .disclaimer a:hover {
+    text-decoration: underline;
+  }
+  .menu-section {
+    display: none;
+  }
+  .menu-section.active {
+    display: block;
+  }
+  .menu-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .menu-buttons {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+  }
+  .menu-btn {
+    flex: 1;
+    padding: 16px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+  .menu-btn:hover {
+    border-color: #007bff;
+    background: #f0f7ff;
+  }
+  .menu-btn.selected {
+    border-color: #007bff;
+    background: #007bff;
+    color: white;
+  }
+  .option-group {
+    margin-bottom: 20px;
+  }
+  .option-group label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #2c3e50;
+    font-size: 1rem;
+  }
+  select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    background-color: white;
+    color: #212529;
+  }
+  select:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  .weight-slider-container {
+    margin-bottom: 10px;
+  }
+  .weight-slider {
+    width: 100%;
+    height: 8px;
+    border-radius: 5px;
+    background: #ddd;
+    outline: none;
+    -webkit-appearance: none;
+  }
+  .weight-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #007bff;
+    cursor: pointer;
+  }
+  .weight-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #007bff;
+    cursor: pointer;
+    border: none;
+  }
+  .weight-display {
+    text-align: center;
+    font-weight: 700;
+    color: #007bff;
+    font-size: 1.2rem;
+    margin-top: 8px;
+  }
+  .game-section {
+    display: none;
+  }
+  .game-section.active {
+    display: block;
+  }
   .card { 
     background: #f8f9fa !important; 
     padding: 20px; 
@@ -117,6 +238,8 @@
   }
   .btn-check { background: #28a745; }
   .btn-next { background: #6c757d; margin-top: 15px; }
+  .btn-start { background: #007bff; margin-top: 10px; }
+  .btn-back { background: #6c757d; margin-top: 10px; }
   .feedback { margin-top: 12px; font-weight: 700; display: none; padding: 10px; border-radius: 6px; text-align: center; }
 </style>
 
@@ -126,46 +249,98 @@
     <small style="font-weight: 400;">ALL DOSES ARE FICTIONAL AND FOR TRAINING PURPOSES ONLY.</small>
   </div>
   
-  <div id="scenario" class="card">Loading child case...</div>
+  <!-- MENU SECTION -->
+  <div id="menuSection" class="menu-section active">
+    <div class="menu-title">Choose Game Mode</div>
+    
+    <div class="menu-buttons">
+      <button class="menu-btn selected" onclick="selectMode('random')">🎲 Random</button>
+      <button class="menu-btn" onclick="selectMode('custom')">⚙️ Custom</button>
+    </div>
 
-  <div id="step1" class="step step-active">
-    <label>1. Target Dose for this Child (mg):</label>
-    <input type="number" id="userMg" step="any" placeholder="Enter mg">
-    <button class="btn-check" onclick="checkStep1()">Confirm Dose</button>
-    <div id="f1" class="feedback"></div>
-  </div>
+    <!-- Random Mode Info -->
+    <div id="randomInfo" style="text-align: center; padding: 20px; background: #f0f7ff; border-radius: 8px; margin-bottom: 20px;">
+      <p style="margin: 0;">Everything randomizes - medication, weight, and all parameters.</p>
+      <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: #666;">Perfect for practicing all scenarios!</p>
+    </div>
 
-  <div id="step2" class="step step-locked">
-    <label>2. Prepare Dilution Syringe (ml):</label>
-    <div style="display:flex; gap:10px; margin-bottom:10px;">
-      <div style="flex:1">
-        <small>Raw Drug (ml)</small>
-        <input type="number" id="drawDrug" step="0.1" placeholder="ml" oninput="updateSyringe()">
+    <!-- Custom Mode Options -->
+    <div id="customOptions" style="display: none;">
+      <div class="option-group">
+        <label>Select Medication:</label>
+        <select id="customMed">
+          <option value="">-- Random --</option>
+        </select>
       </div>
-      <div style="flex:1">
-        <small>Add Saline (ml)</small>
-        <input type="number" id="drawSaline" step="0.1" placeholder="ml" oninput="updateSyringe()">
+
+      <div class="option-group">
+        <label>Select Patient Weight:</label>
+        <div class="weight-slider-container">
+          <input type="range" id="customWeight" class="weight-slider" min="8" max="20" value="12" oninput="updateWeightDisplay()">
+          <div class="weight-display"><span id="weightValue">12</span>kg</div>
+        </div>
       </div>
     </div>
-    <div class="syringe-visual">
-      <div id="fillDrug" class="fill-drug"></div>
-      <div id="fillSaline" class="fill-saline"></div>
-      <div class="syringe-label">DILUTION SYRINGE</div>
+
+    <button class="btn-start" onclick="startGame()">Start Game</button>
+
+    <div class="disclaimer">
+      <strong>Built by Shemi Waldman</strong><br>
+      ⚕️ These doses are <strong>fictional</strong> and do not reflect real-life doses. Always treat according to protocol.<br>
+      🐛 Found a bug or have a request? Email: <a href="mailto:wshemi120@gmail.com">wshemi120@gmail.com</a>
     </div>
-    <div class="math-preview">Mix Concentration: <span id="mixConc">0.00</span> mg/ml</div>
-    <button class="btn-check" style="margin-top:15px" onclick="checkStep2()">Confirm Dilution</button>
-    <div id="f2" class="feedback"></div>
   </div>
 
-  <div id="step3" class="step step-locked">
-    <label>3. Final Volume to Administer (ml):</label>
-    <p style="font-size:0.8rem; color:#666; font-style: italic;">How many ml will you push based on your mix?</p>
-    <input type="number" id="userPush" step="any" placeholder="Enter ml">
-    <button class="btn-check" onclick="checkStep3()">Administer Dose</button>
-    <div id="f3" class="feedback"></div>
-  </div>
+  <!-- GAME SECTION -->
+  <div id="gameSection" class="game-section">
+    <div id="scenario" class="card">Loading child case...</div>
 
-  <button class="btn-next" onclick="generateScenario()">Next Case</button>
+    <div id="step1" class="step step-active">
+      <label>1. Target Dose for this Child (mg):</label>
+      <input type="number" id="userMg" step="any" placeholder="Enter mg">
+      <button class="btn-check" onclick="checkStep1()">Confirm Dose</button>
+      <div id="f1" class="feedback"></div>
+    </div>
+
+    <div id="step2" class="step step-locked">
+      <label>2. Prepare Dilution Syringe (ml):</label>
+      <div style="display:flex; gap:10px; margin-bottom:10px;">
+        <div style="flex:1">
+          <small>Raw Drug (ml)</small>
+          <input type="number" id="drawDrug" step="0.1" placeholder="ml" oninput="updateSyringe()">
+        </div>
+        <div style="flex:1">
+          <small>Add Saline (ml)</small>
+          <input type="number" id="drawSaline" step="0.1" placeholder="ml" oninput="updateSyringe()">
+        </div>
+      </div>
+      <div class="syringe-visual">
+        <div id="fillDrug" class="fill-drug"></div>
+        <div id="fillSaline" class="fill-saline"></div>
+        <div class="syringe-label">DILUTION SYRINGE</div>
+      </div>
+      <div class="math-preview">Mix Concentration: <span id="mixConc">0.00</span> mg/ml</div>
+      <button class="btn-check" style="margin-top:15px" onclick="checkStep2()">Confirm Dilution</button>
+      <div id="f2" class="feedback"></div>
+    </div>
+
+    <div id="step3" class="step step-locked">
+      <label>3. Final Volume to Administer (ml):</label>
+      <p style="font-size:0.8rem; color:#666; font-style: italic;">How many ml will you push based on your mix?</p>
+      <input type="number" id="userPush" step="any" placeholder="Enter ml">
+      <button class="btn-check" onclick="checkStep3()">Administer Dose</button>
+      <div id="f3" class="feedback"></div>
+    </div>
+
+    <button class="btn-next" onclick="nextCase()">Next Case</button>
+    <button class="btn-back" onclick="backToMenu()">Back to Menu</button>
+
+    <div class="disclaimer">
+      <strong>Built by Shemi Waldman</strong><br>
+      ⚕️ These doses are <strong>fictional</strong> and do not reflect real-life doses. Always treat according to protocol.<br>
+      🐛 Found a bug or have a request? Email: <a href="mailto:wshemi120@gmail.com">wshemi120@gmail.com</a>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -173,16 +348,101 @@
     { name: "Adrenaline", protocol: "0.01mg/kg", conc: 1, vol: 1 },
     { name: "Ketamine - Analgesia", protocol: "0.4mg/kg", conc: 50, vol: 10 },
     { name: "Furosemide", protocol: "1mg/kg", conc: 10, vol: 2 },
-    { name: "Tranexamic Acid", protocol: "15mg/kg", conc: 50, vol: 10 }
+    { name: "Tranexamic Acid", protocol: "15mg/kg", conc: 50, vol: 10 },
+    { name: "Crystalline", protocol: "0.05mg/kg", conc: 2, vol: 5 },
+    { name: "Morpheus", protocol: "0.2mg/kg", conc: 25, vol: 4 },
+    { name: "Velocex", protocol: "2mg/kg", conc: 20, vol: 3 }
   ];
 
-  let state = { targetMg: 0, currentMed: {}, currentMixConc: 0 };
+  let state = {
+    targetMg: 0,
+    currentMed: {},
+    currentMixConc: 0,
+    gameMode: 'random',
+    selectedMed: null,
+    selectedWeight: null
+  };
+
+  // Initialize dropdown with medications
+  function initializeMedicationDropdown() {
+    const select = document.getElementById('customMed');
+    medications.forEach((med, index) => {
+      const option = document.createElement('option');
+      option.value = index;
+      option.textContent = med.name;
+      select.appendChild(option);
+    });
+  }
+
+  window.selectMode = function(mode) {
+    state.gameMode = mode;
+    
+    // Update button styling
+    document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('selected'));
+    event.target.classList.add('selected');
+    
+    // Toggle custom options
+    if (mode === 'custom') {
+      document.getElementById('randomInfo').style.display = 'none';
+      document.getElementById('customOptions').style.display = 'block';
+    } else {
+      document.getElementById('randomInfo').style.display = 'block';
+      document.getElementById('customOptions').style.display = 'none';
+    }
+  };
+
+  window.updateWeightDisplay = function() {
+    const weight = document.getElementById('customWeight').value;
+    document.getElementById('weightValue').textContent = weight;
+  };
+
+  window.startGame = function() {
+    // Parse selections
+    const medSelect = document.getElementById('customMed');
+    if (state.gameMode === 'custom' && medSelect.value) {
+      state.selectedMed = parseInt(medSelect.value);
+    } else {
+      state.selectedMed = null;
+    }
+
+    if (state.gameMode === 'custom') {
+      state.selectedWeight = parseInt(document.getElementById('customWeight').value);
+    } else {
+      state.selectedWeight = null;
+    }
+
+    // Switch UI
+    document.getElementById('menuSection').classList.remove('active');
+    document.getElementById('gameSection').classList.add('active');
+
+    // Generate first scenario
+    generateScenario();
+  };
+
+  window.backToMenu = function() {
+    document.getElementById('gameSection').classList.remove('active');
+    document.getElementById('menuSection').classList.add('active');
+  };
 
   window.generateScenario = function() {
-    const med = medications[Math.floor(Math.random() * medications.length)];
-    const weight = Math.floor(Math.random() * 13) + 8;
+    let med, weight;
+
+    // Determine medication
+    if (state.selectedMed !== null) {
+      med = medications[state.selectedMed];
+    } else {
+      med = medications[Math.floor(Math.random() * medications.length)];
+    }
+
+    // Determine weight
+    if (state.selectedWeight !== null) {
+      weight = state.selectedWeight;
+    } else {
+      weight = Math.floor(Math.random() * 13) + 8;
+    }
+
     state.currentMed = med;
-    state.targetMg = parseFloat(med.protocol) * weight;
+    state.targetMg = parseFloat(med.protocol.split('mg/kg')[0]) * weight;
 
     document.getElementById('scenario').innerHTML = `
       <strong>Patient:</strong> Child (${weight}kg)<br>
@@ -191,6 +451,14 @@
       <strong>Supplied:</strong> ${med.conc}mg/ml (${med.vol}ml ampule)
     `;
 
+    resetSteps();
+  };
+
+  window.nextCase = function() {
+    generateScenario();
+  };
+
+  window.resetSteps = function() {
     document.querySelectorAll('.feedback').forEach(f => f.style.display = 'none');
     document.querySelectorAll('.step').forEach(s => s.className = 'step step-locked');
     document.getElementById('step1').className = 'step step-active';
@@ -259,5 +527,6 @@
     }
   };
 
-  generateScenario();
+  // Initialize on page load
+  initializeMedicationDropdown();
 </script>
