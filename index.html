@@ -180,7 +180,7 @@
 
   window.generateScenario = function() {
     const med = medications[Math.floor(Math.random() * medications.length)];
-    const weight = Math.floor(Math.random() * 13) + 3;
+    const weight = Math.floor(Math.random() * 13) + 8;
     state.currentMed = med;
     state.targetMg = parseFloat(med.protocol) * weight;
 
