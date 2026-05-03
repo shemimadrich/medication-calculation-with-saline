@@ -223,6 +223,40 @@
     font-size: 1.2rem;
     margin-top: 8px;
   }
+  .weight-option-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .weight-option-btn {
+    flex: 1;
+    padding: 10px;
+    border: 2px solid #ddd;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    color: #212529;
+  }
+  body.dark-mode .weight-option-btn {
+    background: #1a1a1a;
+    border-color: #444;
+    color: #e0e0e0;
+  }
+  .weight-option-btn:hover {
+    border-color: #007bff;
+    background: #f0f7ff;
+  }
+  body.dark-mode .weight-option-btn:hover {
+    background: #2a2a2a;
+  }
+  .weight-option-btn.selected {
+    border-color: #007bff;
+    background: #007bff;
+    color: white;
+  }
   .game-section {
     display: none;
   }
@@ -462,7 +496,7 @@
     <!-- Practice Mode Info -->
     <div id="practiceInfo" class="mode-info">
       <p><strong>Learn at Your Own Pace</strong></p>
-      <p>No timer, random or custom medications and weights</p>
+      <p>No timer, customize medications and weights as you like</p>
     </div>
 
     <!-- Game Mode Info -->
@@ -487,9 +521,15 @@
 
       <div class="option-group">
         <label>Select Patient Weight:</label>
-        <div class="weight-slider-container">
-          <input type="range" id="customWeight" class="weight-slider" min="8" max="20" value="12" oninput="updateWeightDisplay()">
-          <div class="weight-display"><span id="weightValue">12</span>kg</div>
+        <div class="weight-option-buttons">
+          <button class="weight-option-btn selected" onclick="selectWeightMode('random')">🎲 Random</button>
+          <button class="weight-option-btn" onclick="selectWeightMode('custom')">⚙️ Custom</button>
+        </div>
+        <div id="customWeightSlider" style="display: none; margin-top: 15px;">
+          <div class="weight-slider-container">
+            <input type="range" id="customWeight" class="weight-slider" min="8" max="20" value="12" oninput="updateWeightDisplay()">
+            <div class="weight-display"><span id="weightValue">12</span>kg</div>
+          </div>
         </div>
       </div>
     </div>
@@ -597,6 +637,7 @@
     gameMode: 'practice', // 'practice' or 'game'
     selectedMed: null,
     selectedWeight: null,
+    weightMode: 'random', // 'random' or 'custom' for practice mode
     score: 0,
     caseCount: 0,
     gameActive: false,
@@ -649,9 +690,25 @@
     }
   };
 
+  window.selectWeightMode = function(mode) {
+    state.weightMode = mode;
+    
+    document.querySelectorAll('.weight-option-btn').forEach(btn => btn.classList.remove('selected'));
+    event.target.classList.add('selected');
+    
+    if (mode === 'custom') {
+      document.getElementById('customWeightSlider').style.display = 'block';
+      state.selectedWeight = parseInt(document.getElementById('customWeight').value);
+    } else {
+      document.getElementById('customWeightSlider').style.display = 'none';
+      state.selectedWeight = null;
+    }
+  };
+
   window.updateWeightDisplay = function() {
     const weight = document.getElementById('customWeight').value;
     document.getElementById('weightValue').textContent = weight;
+    state.selectedWeight = parseInt(weight);
   };
 
   window.startGame = function() {
@@ -663,7 +720,7 @@
       } else {
         state.selectedMed = null;
       }
-      state.selectedWeight = parseInt(document.getElementById('customWeight').value);
+      // Weight mode already set by selectWeightMode
     } else {
       // Game mode: always random
       state.selectedMed = null;
@@ -740,9 +797,16 @@
       med = medications[Math.floor(Math.random() * medications.length)];
     }
 
-    if (state.selectedWeight !== null) {
-      weight = state.selectedWeight;
+    // For practice mode: check weight mode
+    if (state.gameMode === 'practice') {
+      if (state.weightMode === 'custom' && state.selectedWeight !== null) {
+        weight = state.selectedWeight;
+      } else {
+        // Random weight
+        weight = Math.floor(Math.random() * 13) + 8;
+      }
     } else {
+      // Game mode: always random
       weight = Math.floor(Math.random() * 13) + 8;
     }
 
@@ -765,10 +829,6 @@
 
   window.nextCase = function() {
     if (!state.gameActive && state.gameMode === 'game') return;
-    if (state.selectedWeight === null && state.gameMode === 'practice') {
-      // Generate with random weight but same medication
-      state.selectedWeight = null;
-    }
     generateScenario();
   };
 
