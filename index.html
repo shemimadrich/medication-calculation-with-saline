@@ -6,6 +6,11 @@
     justify-content: center; 
     padding: 40px 20px; 
     margin: 0;
+    transition: background-color 0.3s ease;
+  }
+  body.dark-mode {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
   }
   .container { 
     background: white; 
@@ -13,7 +18,28 @@
     border-radius: 16px; 
     box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
     width: 100%; 
-    max-width: 550px; 
+    max-width: 550px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  body.dark-mode .container {
+    background: #2d2d2d;
+    color: #e0e0e0;
+  }
+  .dark-mode-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    z-index: 100;
+  }
+  .dark-mode-toggle:hover {
+    background: #0056b3;
   }
   .warning { 
     background: #fff3cd; 
@@ -26,6 +52,11 @@
     text-align: center; 
     font-weight: 800; 
   }
+  body.dark-mode .warning {
+    background: #3d3000;
+    color: #ffc107;
+    border-color: #664d00;
+  }
   .disclaimer {
     background: #f0f2f5;
     color: #495057;
@@ -36,6 +67,12 @@
     border: 1px solid #dee2e6;
     text-align: center;
     line-height: 1.5;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  body.dark-mode .disclaimer {
+    background: #1a1a1a;
+    color: #b0b0b0;
+    border-color: #444;
   }
   .disclaimer a {
     color: #007bff;
@@ -57,12 +94,15 @@
     margin-bottom: 20px;
     text-align: center;
   }
-  .menu-buttons {
+  body.dark-mode .menu-title {
+    color: #e0e0e0;
+  }
+  .mode-selector {
     display: flex;
     gap: 15px;
     margin-bottom: 25px;
   }
-  .menu-btn {
+  .mode-btn {
     flex: 1;
     padding: 16px;
     border: 2px solid #ddd;
@@ -72,15 +112,45 @@
     font-weight: 700;
     font-size: 1rem;
     transition: all 0.3s ease;
+    color: #212529;
   }
-  .menu-btn:hover {
+  body.dark-mode .mode-btn {
+    background: #1a1a1a;
+    border-color: #444;
+    color: #e0e0e0;
+  }
+  .mode-btn:hover {
     border-color: #007bff;
     background: #f0f7ff;
   }
-  .menu-btn.selected {
+  body.dark-mode .mode-btn:hover {
+    background: #2a2a2a;
+    border-color: #007bff;
+  }
+  .mode-btn.selected {
     border-color: #007bff;
     background: #007bff;
     color: white;
+  }
+  .mode-info {
+    text-align: center;
+    padding: 20px;
+    background: #f0f7ff;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    transition: background-color 0.3s ease;
+  }
+  body.dark-mode .mode-info {
+    background: #1a3a4a;
+    color: #b0d4ff;
+  }
+  .mode-info p {
+    margin: 0;
+  }
+  .mode-info p:not(:first-child) {
+    margin-top: 5px;
+    font-size: 0.9rem;
+    opacity: 0.8;
   }
   .option-group {
     margin-bottom: 20px;
@@ -92,6 +162,9 @@
     color: #2c3e50;
     font-size: 1rem;
   }
+  body.dark-mode .option-group label {
+    color: #e0e0e0;
+  }
   select {
     width: 100%;
     padding: 12px;
@@ -101,6 +174,12 @@
     font-size: 1rem;
     background-color: white;
     color: #212529;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  body.dark-mode select {
+    background-color: #1a1a1a;
+    border-color: #444;
+    color: #e0e0e0;
   }
   select:focus {
     border-color: #007bff;
@@ -116,6 +195,9 @@
     background: #ddd;
     outline: none;
     -webkit-appearance: none;
+  }
+  body.dark-mode .weight-slider {
+    background: #444;
   }
   .weight-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
@@ -147,6 +229,42 @@
   .game-section.active {
     display: block;
   }
+  .game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+  }
+  body.dark-mode .game-header {
+    background: #1a1a1a;
+  }
+  .score-display {
+    text-align: center;
+  }
+  .score-label {
+    font-size: 0.85rem;
+    color: #666;
+  }
+  body.dark-mode .score-label {
+    color: #999;
+  }
+  .score-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #28a745;
+  }
+  .timer-display {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  .timer-display.warning-time {
+    color: #ff6b6b;
+  }
   .card { 
     background: #f8f9fa !important; 
     padding: 20px; 
@@ -158,6 +276,12 @@
     color: #212529 !important; 
     opacity: 1 !important; 
     display: block !important;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  body.dark-mode .card {
+    background: #1a1a1a !important;
+    color: #e0e0e0 !important;
+    border-left-color: #0056b3;
   }
   .step { 
     background: #ffffff; 
@@ -167,9 +291,16 @@
     border: 2px solid #e9ecef; 
     transition: all 0.4s ease; 
   }
+  body.dark-mode .step {
+    background: #1a1a1a;
+    border-color: #444;
+  }
   .step-active { 
     border-color: #007bff; 
     box-shadow: 0 4px 12px rgba(0,123,255,0.15); 
+  }
+  body.dark-mode .step-active {
+    box-shadow: 0 4px 12px rgba(0,123,255,0.25);
   }
   .step-locked { 
     opacity: 0.3; 
@@ -183,6 +314,9 @@
     color: #2c3e50; 
     font-size: 1rem; 
   }
+  body.dark-mode label {
+    color: #e0e0e0;
+  }
   input[type=number] { 
     width: 100%; 
     padding: 14px; 
@@ -192,6 +326,12 @@
     font-size: 16px;
     background-color: white !important;
     color: #212529 !important;
+    transition: background-color 0.3s ease;
+  }
+  body.dark-mode input[type=number] {
+    background-color: #2a2a2a !important;
+    border-color: #444 !important;
+    color: #e0e0e0 !important;
   }
   .syringe-visual { 
     margin: 20px 0; 
@@ -203,8 +343,15 @@
     overflow: hidden; 
     display: flex; 
   }
+  body.dark-mode .syringe-visual {
+    background: #444;
+    border-color: #666;
+  }
   .fill-drug { background: #007bff; height: 100%; width: 0%; transition: width 0.4s ease-out; }
   .fill-saline { background: #add8e6; height: 100%; width: 0%; transition: width 0.4s ease-out; }
+  body.dark-mode .fill-saline {
+    background: #0088cc;
+  }
   .syringe-label { 
     position: absolute; 
     width: 100%; 
@@ -214,6 +361,9 @@
     font-weight: 800; 
     z-index: 5; 
     color: #212529; 
+  }
+  body.dark-mode .syringe-label {
+    color: #e0e0e0;
   }
   .math-preview { 
     background: #2c3e50; 
@@ -225,6 +375,11 @@
     margin-top: 15px; 
     font-size: 1.1rem; 
   }
+  body.dark-mode .math-preview {
+    background: #1a1a1a;
+    color: #4ade80;
+    border: 1px solid #444;
+  }
   button { 
     width: 100%; 
     padding: 14px; 
@@ -235,13 +390,59 @@
     font-weight: 700; 
     cursor: pointer; 
     margin-top: 5px;
+    transition: all 0.3s ease;
   }
   .btn-check { background: #28a745; }
+  .btn-check:hover { background: #218838; }
   .btn-next { background: #6c757d; margin-top: 15px; }
+  .btn-next:hover { background: #5a6268; }
   .btn-start { background: #007bff; margin-top: 10px; }
+  .btn-start:hover { background: #0056b3; }
   .btn-back { background: #6c757d; margin-top: 10px; }
-  .feedback { margin-top: 12px; font-weight: 700; display: none; padding: 10px; border-radius: 6px; text-align: center; }
+  .btn-back:hover { background: #5a6268; }
+  .button-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  .button-row button {
+    flex: 1;
+    margin-top: 0;
+  }
+  .feedback { 
+    margin-top: 12px; 
+    font-weight: 700; 
+    display: none; 
+    padding: 10px; 
+    border-radius: 6px; 
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+  .case-counter {
+    font-size: 0.9rem;
+    color: #666;
+  }
+  body.dark-mode .case-counter {
+    color: #999;
+  }
+  .high-score {
+    background: #fffbea;
+    border: 2px solid #ffc107;
+    color: #856404;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 700;
+  }
+  body.dark-mode .high-score {
+    background: #3d3000;
+    border-color: #664d00;
+    color: #ffc107;
+  }
 </style>
+
+<button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙 Dark</button>
 
 <div class="container">
   <div class="warning">
@@ -251,21 +452,32 @@
   
   <!-- MENU SECTION -->
   <div id="menuSection" class="menu-section active">
-    <div class="menu-title">Choose Game Mode</div>
+    <div class="menu-title">Medication Calculation Game</div>
     
-    <div class="menu-buttons">
-      <button class="menu-btn selected" onclick="selectMode('random')">🎲 Random</button>
-      <button class="menu-btn" onclick="selectMode('custom')">⚙️ Custom</button>
+    <div class="mode-selector">
+      <button class="mode-btn selected" onclick="selectGameMode('practice')">🎓 Practice Mode</button>
+      <button class="mode-btn" onclick="selectGameMode('game')">🎮 Game Mode</button>
     </div>
 
-    <!-- Random Mode Info -->
-    <div id="randomInfo" style="text-align: center; padding: 20px; background: #f0f7ff; border-radius: 8px; margin-bottom: 20px;">
-      <p style="margin: 0;">Everything randomizes - medication, weight, and all parameters.</p>
-      <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: #666;">Perfect for practicing all scenarios!</p>
+    <!-- Practice Mode Info -->
+    <div id="practiceInfo" class="mode-info">
+      <p><strong>Learn at Your Own Pace</strong></p>
+      <p>No timer, random or custom medications and weights</p>
     </div>
 
-    <!-- Custom Mode Options -->
-    <div id="customOptions" style="display: none;">
+    <!-- Game Mode Info -->
+    <div id="gameInfo" class="mode-info" style="display: none;">
+      <p><strong>Race Against Time!</strong></p>
+      <p>⏱️ 2 minutes | Random medications | Score points for accuracy</p>
+    </div>
+
+    <!-- High Score Display -->
+    <div id="highScoreDisplay" class="high-score" style="display: none;">
+      🏆 Your High Score: <span id="highScoreValue">0</span>
+    </div>
+
+    <!-- Practice Mode Options -->
+    <div id="practiceOptions">
       <div class="option-group">
         <label>Select Medication:</label>
         <select id="customMed">
@@ -282,7 +494,12 @@
       </div>
     </div>
 
-    <button class="btn-start" onclick="startGame()">Start Game</button>
+    <!-- Game Mode Options (hidden) -->
+    <div id="gameOptions" style="display: none;">
+      <p style="text-align: center; font-weight: 700; color: #28a745;">Ready to test your skills?</p>
+    </div>
+
+    <button class="btn-start" onclick="startGame()">Start</button>
 
     <div class="disclaimer">
       <strong>Built by Shemi Waldman</strong><br>
@@ -293,6 +510,20 @@
 
   <!-- GAME SECTION -->
   <div id="gameSection" class="game-section">
+    <div class="game-header">
+      <div>
+        <div class="case-counter">Case <span id="caseNumber">1</span></div>
+      </div>
+      <div id="scoreDisplay" style="display: none;">
+        <div class="score-label">Score</div>
+        <div class="score-value"><span id="currentScore">0</span></div>
+      </div>
+      <div id="timerDisplay" style="display: none;">
+        <div class="score-label">Time</div>
+        <div class="timer-display"><span id="timeLeft">2:00</span></div>
+      </div>
+    </div>
+
     <div id="scenario" class="card">Loading child case...</div>
 
     <div id="step1" class="step step-active">
@@ -332,8 +563,10 @@
       <div id="f3" class="feedback"></div>
     </div>
 
-    <button class="btn-next" onclick="nextCase()">Next Case</button>
-    <button class="btn-back" onclick="backToMenu()">Back to Menu</button>
+    <div class="button-row">
+      <button class="btn-next" onclick="nextCase()">Next Case</button>
+      <button class="btn-back" onclick="backToMenu()">Back to Menu</button>
+    </div>
 
     <div class="disclaimer">
       <strong>Built by Shemi Waldman</strong><br>
@@ -344,26 +577,36 @@
 </div>
 
 <script>
+  // All medications (original + practice drugs)
   const medications = [
-    { name: "Adrenaline", protocol: "0.01mg/kg", conc: 1, vol: 1 },
-    { name: "Ketamine - Analgesia", protocol: "0.4mg/kg", conc: 50, vol: 10 },
-    { name: "Furosemide", protocol: "1mg/kg", conc: 10, vol: 2 },
-    { name: "Tranexamic Acid", protocol: "15mg/kg", conc: 50, vol: 10 },
-    { name: "Crystalline", protocol: "0.05mg/kg", conc: 2, vol: 5 },
-    { name: "Morpheus", protocol: "0.2mg/kg", conc: 25, vol: 4 },
-    { name: "Velocex", protocol: "2mg/kg", conc: 20, vol: 3 }
+    { name: "Adrenaline", protocol: "0.01mg/kg", conc: 1, vol: 1, category: "clinical" },
+    { name: "Ketamine - Analgesia", protocol: "0.4mg/kg", conc: 50, vol: 10, category: "clinical" },
+    { name: "Furosemide", protocol: "1mg/kg", conc: 10, vol: 2, category: "clinical" },
+    { name: "Tranexamic Acid", protocol: "15mg/kg", conc: 50, vol: 10, category: "clinical" },
+    { name: "Practice Drug (Easy)", protocol: "0.05mg/kg", conc: 5, vol: 10, category: "practice" },
+    { name: "Practice Drug (Easy-Med)", protocol: "0.1mg/kg", conc: 2, vol: 5, category: "practice" },
+    { name: "Practice Drug (Medium)", protocol: "0.5mg/kg", conc: 10, vol: 5, category: "practice" },
+    { name: "Practice Drug (Med-Hard)", protocol: "1mg/kg", conc: 20, vol: 4, category: "practice" },
+    { name: "Practice Drug (Hard)", protocol: "2mg/kg", conc: 20, vol: 3, category: "practice" }
   ];
 
   let state = {
     targetMg: 0,
     currentMed: {},
     currentMixConc: 0,
-    gameMode: 'random',
+    gameMode: 'practice', // 'practice' or 'game'
     selectedMed: null,
-    selectedWeight: null
+    selectedWeight: null,
+    score: 0,
+    caseCount: 0,
+    gameActive: false,
+    timeRemaining: 120,
+    timerInterval: null,
+    highScore: localStorage.getItem('medCalcHighScore') || 0,
+    step1Completed: false,
+    step2Completed: false
   };
 
-  // Initialize dropdown with medications
   function initializeMedicationDropdown() {
     const select = document.getElementById('customMed');
     medications.forEach((med, index) => {
@@ -374,20 +617,35 @@
     });
   }
 
-  window.selectMode = function(mode) {
+  function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+  }
+
+  function loadDarkMode() {
+    if (localStorage.getItem('darkMode') === 'true') {
+      document.body.classList.add('dark-mode');
+    }
+  }
+
+  window.selectGameMode = function(mode) {
     state.gameMode = mode;
     
-    // Update button styling
-    document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('selected'));
+    document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('selected'));
     event.target.classList.add('selected');
     
-    // Toggle custom options
-    if (mode === 'custom') {
-      document.getElementById('randomInfo').style.display = 'none';
-      document.getElementById('customOptions').style.display = 'block';
+    if (mode === 'game') {
+      document.getElementById('practiceInfo').style.display = 'none';
+      document.getElementById('gameInfo').style.display = 'block';
+      document.getElementById('practiceOptions').style.display = 'none';
+      document.getElementById('gameOptions').style.display = 'block';
+      document.getElementById('highScoreDisplay').style.display = 'block';
     } else {
-      document.getElementById('randomInfo').style.display = 'block';
-      document.getElementById('customOptions').style.display = 'none';
+      document.getElementById('practiceInfo').style.display = 'block';
+      document.getElementById('gameInfo').style.display = 'none';
+      document.getElementById('practiceOptions').style.display = 'block';
+      document.getElementById('gameOptions').style.display = 'none';
+      document.getElementById('highScoreDisplay').style.display = 'none';
     }
   };
 
@@ -397,44 +655,91 @@
   };
 
   window.startGame = function() {
-    // Parse selections
     const medSelect = document.getElementById('customMed');
-    if (state.gameMode === 'custom' && medSelect.value) {
-      state.selectedMed = parseInt(medSelect.value);
-    } else {
-      state.selectedMed = null;
-    }
-
-    if (state.gameMode === 'custom') {
+    
+    if (state.gameMode === 'practice') {
+      if (medSelect.value) {
+        state.selectedMed = parseInt(medSelect.value);
+      } else {
+        state.selectedMed = null;
+      }
       state.selectedWeight = parseInt(document.getElementById('customWeight').value);
     } else {
+      // Game mode: always random
+      state.selectedMed = null;
       state.selectedWeight = null;
+      state.score = 0;
+      state.caseCount = 0;
+      state.timeRemaining = 120;
+      state.gameActive = true;
+      document.getElementById('scoreDisplay').style.display = 'block';
+      document.getElementById('timerDisplay').style.display = 'block';
+      startTimer();
     }
 
-    // Switch UI
     document.getElementById('menuSection').classList.remove('active');
     document.getElementById('gameSection').classList.add('active');
-
-    // Generate first scenario
+    state.caseCount = 0;
     generateScenario();
   };
 
   window.backToMenu = function() {
+    if (state.timerInterval) clearInterval(state.timerInterval);
+    state.gameActive = false;
     document.getElementById('gameSection').classList.remove('active');
     document.getElementById('menuSection').classList.add('active');
+    document.getElementById('scoreDisplay').style.display = 'none';
+    document.getElementById('timerDisplay').style.display = 'none';
   };
+
+  function startTimer() {
+    state.timerInterval = setInterval(() => {
+      state.timeRemaining--;
+      updateTimerDisplay();
+      
+      if (state.timeRemaining <= 0) {
+        clearInterval(state.timerInterval);
+        endGame();
+      }
+    }, 1000);
+  }
+
+  function updateTimerDisplay() {
+    const mins = Math.floor(state.timeRemaining / 60);
+    const secs = state.timeRemaining % 60;
+    const timerEl = document.getElementById('timeLeft');
+    timerEl.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+    
+    if (state.timeRemaining <= 30) {
+      timerEl.parentElement.classList.add('warning-time');
+    } else {
+      timerEl.parentElement.classList.remove('warning-time');
+    }
+  }
+
+  function endGame() {
+    state.gameActive = false;
+    
+    if (state.score > state.highScore) {
+      state.highScore = state.score;
+      localStorage.setItem('medCalcHighScore', state.highScore);
+      alert(`⏰ TIME'S UP!\n\n🏆 NEW HIGH SCORE: ${state.score} points!\n\nCases completed: ${state.caseCount}`);
+    } else {
+      alert(`⏰ TIME'S UP!\n\nFinal Score: ${state.score} points\nHigh Score: ${state.highScore}\n\nCases completed: ${state.caseCount}`);
+    }
+    
+    backToMenu();
+  }
 
   window.generateScenario = function() {
     let med, weight;
 
-    // Determine medication
     if (state.selectedMed !== null) {
       med = medications[state.selectedMed];
     } else {
       med = medications[Math.floor(Math.random() * medications.length)];
     }
 
-    // Determine weight
     if (state.selectedWeight !== null) {
       weight = state.selectedWeight;
     } else {
@@ -443,7 +748,11 @@
 
     state.currentMed = med;
     state.targetMg = parseFloat(med.protocol.split('mg/kg')[0]) * weight;
+    state.caseCount++;
+    state.step1Completed = false;
+    state.step2Completed = false;
 
+    document.getElementById('caseNumber').textContent = state.caseCount;
     document.getElementById('scenario').innerHTML = `
       <strong>Patient:</strong> Child (${weight}kg)<br>
       <strong>Medication:</strong> <span style="color:#007bff; font-weight:bold;">${med.name}</span><br>
@@ -455,6 +764,11 @@
   };
 
   window.nextCase = function() {
+    if (!state.gameActive && state.gameMode === 'game') return;
+    if (state.selectedWeight === null && state.gameMode === 'practice') {
+      // Generate with random weight but same medication
+      state.selectedWeight = null;
+    }
     generateScenario();
   };
 
@@ -489,13 +803,25 @@
     const val = parseFloat(document.getElementById('userMg').value);
     const f = document.getElementById('f1');
     f.style.display = 'block';
+    
     if (Math.abs(val - state.targetMg) < 0.01) {
       f.innerHTML = "✅ Correct. Dose required is " + state.targetMg.toFixed(2) + "mg";
       f.style.color = "#155724"; f.style.backgroundColor = "#d4edda";
       document.getElementById('step2').className = 'step step-active';
+      
+      if (state.gameActive) {
+        state.score += 1;
+        document.getElementById('currentScore').textContent = state.score;
+        state.step1Completed = true;
+      }
     } else {
       f.innerHTML = "❌ Calculation Error. Check weight x protocol.";
       f.style.color = "#721c24"; f.style.backgroundColor = "#f8d7da";
+      
+      if (state.gameActive) {
+        state.score -= 2;
+        document.getElementById('currentScore').textContent = state.score;
+      }
     }
   };
 
@@ -507,9 +833,15 @@
       f.innerHTML = "✅ Dilution Ready.";
       f.style.color = "#155724"; f.style.backgroundColor = "#d4edda";
       document.getElementById('step3').className = 'step step-active';
+      state.step2Completed = true;
     } else {
       f.innerHTML = "❌ Draw drug first.";
       f.style.color = "#721c24"; f.style.backgroundColor = "#f8d7da";
+      
+      if (state.gameActive) {
+        state.score -= 1;
+        document.getElementById('currentScore').textContent = state.score;
+      }
     }
   };
 
@@ -518,15 +850,45 @@
     const expectedPush = state.targetMg / state.currentMixConc;
     const f = document.getElementById('f3');
     f.style.display = 'block';
+    
     if (Math.abs(push - expectedPush) < 0.1) {
       f.innerHTML = "✅ SUCCESS! Dose administered.";
       f.style.color = "#155724"; f.style.backgroundColor = "#d4edda";
+      
+      if (state.gameActive) {
+        state.score += 2;
+        document.getElementById('currentScore').textContent = state.score;
+      }
     } else {
       f.innerHTML = `❌ Volume Error. You needed ${expectedPush.toFixed(2)}ml.`;
       f.style.color = "#721c24"; f.style.backgroundColor = "#f8d7da";
+      
+      if (state.gameActive) {
+        state.score -= 3;
+        document.getElementById('currentScore').textContent = state.score;
+      }
     }
   };
 
-  // Initialize on page load
+  // Keyboard support
+  document.addEventListener('keydown', (e) => {
+    if (!state.gameActive && document.getElementById('gameSection').classList.contains('active')) return;
+    
+    if (e.key === 'Enter') {
+      if (document.getElementById('step1').classList.contains('step-active') && 
+          !document.getElementById('step2').classList.contains('step-active')) {
+        checkStep1();
+      } else if (document.getElementById('step2').classList.contains('step-active') && 
+                 !document.getElementById('step3').classList.contains('step-active')) {
+        checkStep2();
+      } else if (document.getElementById('step3').classList.contains('step-active')) {
+        checkStep3();
+      }
+    }
+  });
+
+  // Initialize
+  loadDarkMode();
   initializeMedicationDropdown();
+  document.getElementById('highScoreValue').textContent = state.highScore;
 </script>
