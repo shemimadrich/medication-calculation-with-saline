@@ -274,7 +274,6 @@
   }
   .game-section {
     display: none;
-    padding-top: 180px;      /* This creates a "hole" at the top for the card to sit in */
   }
   .game-section.active {
     display: block;
@@ -318,25 +317,17 @@
     color: #ff6b6b;
   }
   .card { 
-    /* Positioning Logic */
-    position: fixed;         /* Changed from sticky to fixed */
-    top: 10px;               /* Stays 10px from the very top of the screen */
-    left: 10px;              /* Keeps it centered horizontally with right:10px */
-    right: 10px;
-    z-index: 999;            /* High number ensures it stays above EVERYTHING */
-    
-    /* Visuals */
     background: #f8f9fa !important; 
-    padding: 12px;           /* Slightly tighter padding to save vertical space */
+    padding: 10px; 
     border-radius: 12px; 
+    margin-bottom: 12px; 
     border-left: 8px solid #007bff; 
-    line-height: 1.3;        /* Tighter line height so it's a compact "HUD" */
-    font-size: 1.6rem;       /* Slightly smaller than before so it fits on mobile */
+    line-height: 1.4;
+    font-size: 1.8rem;
     color: #212529 !important; 
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3); 
-    
-    display: block !important;
-    transition: background-color 0.3s ease;
+    opacity: 1 !important;        /* RESTORED */
+    display: block !important;     /* RESTORED */
+    transition: background-color 0.3s ease, color 0.3s ease; /* RESTORED */
   }
   body.dark-mode .card {
     background: #1a1a1a !important;
