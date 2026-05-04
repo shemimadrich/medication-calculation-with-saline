@@ -10,11 +10,12 @@
     display: flex; 
     justify-content: center; 
     align-items: flex-start; 
-    padding: 5px;            /* Even less padding for mobile edges */
+    padding: 5px;
     margin: 0;
-    transition: background-color 0.3s ease;
-    min-height: 100vh;
-    font-size: 20px;         /* Increased base font further */
+    transition: background-color 0.3s ease; /* RESTORED */
+    min-height: 100vh;                       /* RESTORED */
+    font-size: 22px;         /* Much easier to read */
+    line-height: 1.5; 
   }
   body.dark-mode {
     background-color: #1e1e1e;
@@ -317,16 +318,16 @@
   }
   .card { 
     background: #f8f9fa !important; 
-    padding: 15px;           /* Reduced padding */
+    padding: 15px; 
     border-radius: 12px; 
-    margin-bottom: 12px;     /* Reduced margin from 25px */
+    margin-bottom: 12px; 
     border-left: 8px solid #007bff; 
-    line-height: 1.4;        /* Tighter line height */
-    font-size: 1.1rem;
+    line-height: 1.4;
+    font-size: 1.2rem;
     color: #212529 !important; 
-    opacity: 1 !important; 
-    display: block !important;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    opacity: 1 !important;        /* RESTORED */
+    display: block !important;     /* RESTORED */
+    transition: background-color 0.3s ease, color 0.3s ease; /* RESTORED */
   }
   body.dark-mode .card {
     background: #1a1a1a !important;
@@ -335,11 +336,11 @@
   }
   .step { 
     background: #ffffff; 
-    padding: 15px;           /* Reduced padding from 20px */
+    padding: 15px; 
     border-radius: 12px; 
-    margin-bottom: 12px;     /* Reduced margin from 20px */
+    margin-bottom: 12px; 
     border: 2px solid #e9ecef; 
-    transition: all 0.4s ease; 
+    transition: all 0.4s ease;     /* RESTORED */
   }
   body.dark-mode .step {
     background: #1a1a1a;
@@ -360,23 +361,24 @@
   label { 
     display: block; 
     font-weight: 700; 
-    margin-bottom: 6px;      /* Halved the margin */
+    margin-bottom: 8px;
     color: #2c3e50; 
-    font-size: 1rem; 
+    font-size: 1.2rem;       /* This makes labels even larger than the body text */
+    line-height: 1.2;
   }
   body.dark-mode label {
     color: #e0e0e0;
   }
  input[type=number] { 
     width: 100%; 
-    padding: 14px; 
+    padding: 18px; 
     border: 2px solid #ddd; 
     border-radius: 8px; 
-    box-sizing: border-box; 
-    font-size: 1.2rem; /* Increased from 16px to be larger and match the UI */
-    background-color: white !important;
-    color: #212529 !important;
-    transition: background-color 0.3s ease;
+    box-sizing: border-box;  /* RESTORED: Prevents input from being too wide */
+    font-size: 1.4rem; 
+    background-color: white !important;   /* RESTORED */
+    color: #212529 !important;            /* RESTORED */
+    transition: background-color 0.3s ease; /* RESTORED */
   }
   body.dark-mode input[type=number] {
     background-color: #2a2a2a !important;
@@ -384,13 +386,13 @@
     color: #e0e0e0 !important;
   }
   .syringe-visual { 
-    margin: 20px 0; 
+    margin: 15px 0; 
     background: #e9ecef; 
-    height: 45px; 
+    height: 35px;            /* Slimmer to save height */
     border: 3px solid #495057; 
     border-radius: 5px 30px 30px 5px; 
     position: relative; 
-    overflow: hidden; 
+    overflow: hidden;       /* RESTORED: This keeps the "fill" inside the borders */
     display: flex; 
   }
   body.dark-mode .syringe-visual {
@@ -405,12 +407,12 @@
   .syringe-label { 
     position: absolute; 
     width: 100%; 
-    top: 12px; 
+    top: 6px;               /* Re-centered for 35px height */
     text-align: center; 
-    font-size: 0.85rem; 
+    font-size: 0.9rem; 
     font-weight: 800; 
-    z-index: 5; 
-    color: #212529; 
+    z-index: 5;             /* RESTORED: Keeps text on top of the drug colors */
+    color: #212529;         /* RESTORED */
   }
   body.dark-mode .syringe-label {
     color: #e0e0e0;
@@ -432,11 +434,9 @@
   }
   button { 
     width: 100%; 
-    padding: 14px; 
-    color: white; 
-    border: none; 
+    padding: 18px;           /* Fattened the buttons */
     border-radius: 8px; 
-    font-size: 1rem; 
+    font-size: 1.2rem;       /* Clear button text */
     font-weight: 700; 
     cursor: pointer; 
     margin-top: 5px;
