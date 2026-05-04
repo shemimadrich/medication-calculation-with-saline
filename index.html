@@ -502,7 +502,7 @@
     <!-- Game Mode Info -->
     <div id="gameInfo" class="mode-info" style="display: none;">
       <p><strong>Race Against Time!</strong></p>
-      <p>⏱️ 2 minutes | Random medications | Score points for accuracy</p>
+      <p>⏱️ 5 minutes | Random medications | Score points for accuracy</p>
     </div>
 
     <!-- High Score Display -->
@@ -560,7 +560,7 @@
       </div>
       <div id="timerDisplay" style="display: none;">
         <div class="score-label">Time</div>
-        <div class="timer-display"><span id="timeLeft">2:00</span></div>
+        <div class="timer-display"><span id="timeLeft">5:00</span></div>
       </div>
     </div>
 
@@ -574,7 +574,15 @@
     </div>
 
     <div id="step2" class="step step-locked">
-      <label>2. Prepare Dilution Syringe (ml):</label>
+      <label>2. How many ampules needed?</label>
+      <p style="font-size:0.8rem; color:#666; font-style: italic;">Calculate how many full ampules you need (rounded up)</p>
+      <input type="number" id="userAmpules" step="1" placeholder="Number of ampules" min="1">
+      <button class="btn-check" onclick="checkStep2()">Confirm Ampules</button>
+      <div id="f2" class="feedback"></div>
+    </div>
+
+    <div id="step3" class="step step-locked">
+      <label>3. Prepare Dilution Syringe (ml):</label>
       <div style="display:flex; gap:10px; margin-bottom:10px;">
         <div style="flex:1">
           <small>Raw Drug (ml)</small>
@@ -591,16 +599,16 @@
         <div class="syringe-label">DILUTION SYRINGE</div>
       </div>
       <div class="math-preview">Mix Concentration: <span id="mixConc">0.00</span> mg/ml</div>
-      <button class="btn-check" style="margin-top:15px" onclick="checkStep2()">Confirm Dilution</button>
-      <div id="f2" class="feedback"></div>
+      <button class="btn-check" style="margin-top:15px" onclick="checkStep3()">Confirm Dilution</button>
+      <div id="f3" class="feedback"></div>
     </div>
 
-    <div id="step3" class="step step-locked">
-      <label>3. Final Volume to Administer (ml):</label>
+    <div id="step4" class="step step-locked">
+      <label>4. Final Volume to Administer (ml):</label>
       <p style="font-size:0.8rem; color:#666; font-style: italic;">How many ml will you push based on your mix?</p>
       <input type="number" id="userPush" step="any" placeholder="Enter ml">
-      <button class="btn-check" onclick="checkStep3()">Administer Dose</button>
-      <div id="f3" class="feedback"></div>
+      <button class="btn-check" onclick="checkStep4()">Administer Dose</button>
+      <div id="f4" class="feedback"></div>
     </div>
 
     <div class="button-row">
@@ -624,10 +632,10 @@
     { name: "Furosemide", protocol: "1mg/kg", conc: 10, vol: 2, category: "clinical" },
     { name: "Tranexamic Acid", protocol: "15mg/kg", conc: 50, vol: 10, category: "clinical" },
     { name: "Practice Drug (Easy)", protocol: "0.05mg/kg", conc: 5, vol: 10, category: "practice" },
-    { name: "Practice Drug (Easy-Med)", protocol: "0.1mg/kg", conc: 2, vol: 5, category: "practice" },
-    { name: "Practice Drug (Medium)", protocol: "0.5mg/kg", conc: 10, vol: 5, category: "practice" },
-    { name: "Practice Drug (Med-Hard)", protocol: "1mg/kg", conc: 20, vol: 4, category: "practice" },
-    { name: "Practice Drug (Hard)", protocol: "2mg/kg", conc: 20, vol: 3, category: "practice" }
+    { name: "Practice Drug (Easy-Med)", protocol: "0.1mg/kg", conc: 10, vol: 5, category: "practice" },
+    { name: "Practice Drug (Medium)", protocol: "0.5mg/kg", conc: 5, vol: 2, category: "practice" },
+    { name: "Practice Drug (Med-Hard)", protocol: "1mg/kg", conc: 10, vol: 1, category: "practice" },
+    { name: "Practice Drug (Hard)", protocol: "2mg/kg", conc: 5, vol: 1, category: "practice" }
   ];
 
   let state = {
@@ -641,11 +649,13 @@
     score: 0,
     caseCount: 0,
     gameActive: false,
-    timeRemaining: 120,
+    timeRemaining: 300,
     timerInterval: null,
     highScore: localStorage.getItem('medCalcHighScore') || 0,
     step1Completed: false,
-    step2Completed: false
+    step2Completed: false,
+    step3Completed: false,
+    caseFlawless: true
   };
 
   function initializeMedicationDropdown() {
@@ -727,7 +737,7 @@
       state.selectedWeight = null;
       state.score = 0;
       state.caseCount = 0;
-      state.timeRemaining = 120;
+      state.timeRemaining = 300;
       state.gameActive = true;
       document.getElementById('scoreDisplay').style.display = 'block';
       document.getElementById('timerDisplay').style.display = 'block';
@@ -815,6 +825,8 @@
     state.caseCount++;
     state.step1Completed = false;
     state.step2Completed = false;
+    state.step3Completed = false;
+    state.caseFlawless = true;
 
     document.getElementById('caseNumber').textContent = state.caseCount;
     document.getElementById('scenario').innerHTML = `
@@ -837,6 +849,7 @@
     document.querySelectorAll('.step').forEach(s => s.className = 'step step-locked');
     document.getElementById('step1').className = 'step step-active';
     document.getElementById('userMg').value = '';
+    document.getElementById('userAmpules').value = '';
     document.getElementById('drawDrug').value = '';
     document.getElementById('drawSaline').value = '';
     document.getElementById('userPush').value = '';
@@ -870,33 +883,42 @@
       document.getElementById('step2').className = 'step step-active';
       
       if (state.gameActive) {
-        state.score += 1;
+        state.score += 2;
         document.getElementById('currentScore').textContent = state.score;
         state.step1Completed = true;
       }
     } else {
       f.innerHTML = "❌ Calculation Error. Check weight x protocol.";
       f.style.color = "#721c24"; f.style.backgroundColor = "#f8d7da";
+      state.caseFlawless = false;
       
       if (state.gameActive) {
-        state.score -= 2;
+        state.score -= 3;
         document.getElementById('currentScore').textContent = state.score;
       }
     }
   };
 
   window.checkStep2 = function() {
-    const d = parseFloat(document.getElementById('drawDrug').value);
+    const userAmpules = parseInt(document.getElementById('userAmpules').value);
+    const expectedAmpules = Math.ceil(state.targetMg / (state.currentMed.conc * state.currentMed.vol));
     const f = document.getElementById('f2');
     f.style.display = 'block';
-    if (d > 0) {
-      f.innerHTML = "✅ Dilution Ready.";
+    
+    if (userAmpules === expectedAmpules) {
+      f.innerHTML = "✅ Correct. You need " + expectedAmpules + " ampule(s).";
       f.style.color = "#155724"; f.style.backgroundColor = "#d4edda";
       document.getElementById('step3').className = 'step step-active';
-      state.step2Completed = true;
+      
+      if (state.gameActive) {
+        state.score += 1;
+        document.getElementById('currentScore').textContent = state.score;
+        state.step2Completed = true;
+      }
     } else {
-      f.innerHTML = "❌ Draw drug first.";
+      f.innerHTML = "❌ Wrong number of ampules. You need " + expectedAmpules + ".";
       f.style.color = "#721c24"; f.style.backgroundColor = "#f8d7da";
+      state.caseFlawless = false;
       
       if (state.gameActive) {
         state.score -= 1;
@@ -906,9 +928,30 @@
   };
 
   window.checkStep3 = function() {
+    const d = parseFloat(document.getElementById('drawDrug').value);
+    const f = document.getElementById('f3');
+    f.style.display = 'block';
+    if (d > 0) {
+      f.innerHTML = "✅ Dilution Ready.";
+      f.style.color = "#155724"; f.style.backgroundColor = "#d4edda";
+      document.getElementById('step4').className = 'step step-active';
+      state.step3Completed = true;
+    } else {
+      f.innerHTML = "❌ Draw drug first.";
+      f.style.color = "#721c24"; f.style.backgroundColor = "#f8d7da";
+      state.caseFlawless = false;
+      
+      if (state.gameActive) {
+        state.score -= 1;
+        document.getElementById('currentScore').textContent = state.score;
+      }
+    }
+  };
+
+  window.checkStep4 = function() {
     const push = parseFloat(document.getElementById('userPush').value);
     const expectedPush = state.targetMg / state.currentMixConc;
-    const f = document.getElementById('f3');
+    const f = document.getElementById('f4');
     f.style.display = 'block';
     
     if (Math.abs(push - expectedPush) < 0.1) {
@@ -916,7 +959,11 @@
       f.style.color = "#155724"; f.style.backgroundColor = "#d4edda";
       
       if (state.gameActive) {
-        state.score += 2;
+        if (state.caseFlawless) {
+          state.score += 5;
+        } else {
+          state.score += 2;
+        }
         document.getElementById('currentScore').textContent = state.score;
       }
     } else {
@@ -941,8 +988,11 @@
       } else if (document.getElementById('step2').classList.contains('step-active') && 
                  !document.getElementById('step3').classList.contains('step-active')) {
         checkStep2();
-      } else if (document.getElementById('step3').classList.contains('step-active')) {
+      } else if (document.getElementById('step3').classList.contains('step-active') && 
+                 !document.getElementById('step4').classList.contains('step-active')) {
         checkStep3();
+      } else if (document.getElementById('step4').classList.contains('step-active')) {
+        checkStep4();
       }
     }
   });
