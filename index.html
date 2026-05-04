@@ -4,30 +4,31 @@
     padding: 0;
     box-sizing: border-box;
   }
-  body { 
+ body { 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
     background-color: #f0f2f5; 
     display: flex; 
     justify-content: center; 
-    align-items: center;
-    padding: 20px;
+    align-items: flex-start; /* Changed from center to move it to the top */
+    padding: 10px;           /* Reduced padding to save space at the top */
     margin: 0;
     transition: background-color 0.3s ease;
     min-height: 100vh;
+    font-size: 18px;         /* Increased base font size */
   }
   body.dark-mode {
     background-color: #1e1e1e;
     color: #e0e0e0;
   }
-  .container { 
+ .container { 
     background: white; 
     padding: 30px; 
     border-radius: 16px; 
     box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
     width: 100%;
     max-width: 900px;
-    max-height: 95vh;
-    overflow-y: auto;
+    /* Removed max-height and overflow-y to let it scale naturally */
+    margin-top: 10px;        /* Small gap so it doesn't touch the very edge */
     transition: background-color 0.3s ease, color 0.3s ease;
   }
   body.dark-mode .container {
@@ -367,13 +368,13 @@
   body.dark-mode label {
     color: #e0e0e0;
   }
-  input[type=number] { 
+ input[type=number] { 
     width: 100%; 
     padding: 14px; 
     border: 2px solid #ddd; 
     border-radius: 8px; 
     box-sizing: border-box; 
-    font-size: 16px;
+    font-size: 1.2rem; /* Increased from 16px to be larger and match the UI */
     background-color: white !important;
     color: #212529 !important;
     transition: background-color 0.3s ease;
