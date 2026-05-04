@@ -1,12 +1,23 @@
 <style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  html, body {
+    height: 100%;
+    width: 100%;
+  }
   body { 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
     background-color: #f0f2f5; 
     display: flex; 
     justify-content: center; 
-    padding: 40px 20px; 
+    align-items: center;
+    padding: 0;
     margin: 0;
     transition: background-color 0.3s ease;
+    min-height: 100vh;
   }
   body.dark-mode {
     background-color: #1e1e1e;
@@ -17,8 +28,10 @@
     padding: 30px; 
     border-radius: 16px; 
     box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
-    width: 100%; 
+    width: 90%;
     max-width: 550px;
+    max-height: 90vh;
+    overflow-y: auto;
     transition: background-color 0.3s ease, color 0.3s ease;
   }
   body.dark-mode .container {
@@ -998,7 +1011,7 @@
   });
 
   // Initialize
-  loadDarkMode();
   initializeMedicationDropdown();
+  loadDarkMode();
   document.getElementById('highScoreValue').textContent = state.highScore;
 </script>
